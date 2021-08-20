@@ -23,8 +23,13 @@ public class SlimePost : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        SlimeMotor sm = other.GetComponent<SlimeMotor>();
-        sm.travelPoint = transform.position;
-        sm.attracted = true;
+        
+        SlimeMotor sm = other.GetComponentInParent<SlimeMotor>();
+        if (sm != null)
+        {
+            sm.travelPoint = transform.position;
+            sm.attracted = true;
+        }
+        
     }
 }

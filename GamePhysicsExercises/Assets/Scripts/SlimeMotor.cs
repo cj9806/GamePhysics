@@ -40,7 +40,7 @@ public class SlimeMotor : MonoBehaviour
         if (elapsed >= jumpInterval)
         {
             //reset timer
-            elapsed = 0f;
+            if(!attracted)elapsed = 0f;
             //if not close to goal
             if (!attracted)
             {
@@ -56,9 +56,17 @@ public class SlimeMotor : MonoBehaviour
             else 
             {
                 Jump();
-                if (targetRay.distance <= 2)
+                if (targetRay.distance <= 1)
                 {
                     horizontalJumpPower = 0;
+                }
+                if(elapsed >= 10)
+                {
+                    //transform.localScale.x *= 2;
+                    //transform.localScale.y *= 2;
+                    //transform.localScale.z *= 2;
+                    Vector3 tempV = Vector3.Scale(new Vector3(2,2,2), transform.position);
+                    transform.localScale = tempV;
                 }
             }
         }
