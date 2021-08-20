@@ -13,20 +13,23 @@ public class SlimeMotor : MonoBehaviour
     public float horizontalJumpPower;
     public float jumpInterval;
     public Vector3 travelPoint;
-    //goal is 4,.75,0
-    // Start is called before the first frame update
     private Rigidbody rb;
     private System.Random random;
     private bool closeToGoal;
     float elapsed;
+    RaycastHit ray;
+    RaycastHit targetRay;
+    public bool attracted;
+    [SerializeField] LayerMask mask;
+    // Start is called before the first frame update
     void Start()
     {
         rb = this.GetComponent<Rigidbody>();
         closeToGoal = false;
         elapsed = 0f;
-        verticleJumpPower *= 100;
-        //horizontalJumpPower *= 100;
         random = new System.Random();
+        attracted = false;
+        
     }
 
     // Update is called once per frame
@@ -34,45 +37,49 @@ public class SlimeMotor : MonoBehaviour
     {
         //basic timer
         elapsed += Time.deltaTime;
-        //after given time
         if (elapsed >= jumpInterval)
         {
             //reset timer
             elapsed = 0f;
             //if not close to goal
-            if (!closeToGoal)
+            if (!attracted)
             {
-                //jump up
+                //jump
                 Jump();
-                //move forward
 
                 //see if close to goal
-                if (travelPoint.x - transform.position.x <= 1 && travelPoint.z - transform.position.z <= 1)
+                if (targetRay.distance <= 2)
                 {
-                    closeToGoal = true;
+                    travelPoint = createNewWaypoint();
                 }
             }
-            else
+            else 
             {
-                travelPoint = createNewWaypoint();
-                closeToGoal = false;
+                Jump();
+                if (targetRay.distance <= 2)
+                {
+                    horizontalJumpPower = 0;
+                }
             }
         }
+        //raycast to look at goal
+        Vector3 goal = (travelPoint - transform.position).normalized;
+        Physics.Raycast(transform.position, goal, out targetRay, mask);
+        Debug.Log(targetRay.collider.gameObject.name);
 
     }
     void Jump()
     {
-        if (this.transform.position.y == .75)
-        {
-            rb.AddForce(0, verticleJumpPower, 0);
-            rb.AddForce((travelPoint - transform.position).normalized * horizontalJumpPower * Time.deltaTime);
-            //jump forward
-        }
+        Physics.Raycast(transform.position, Vector3.down, out ray);
+        //jump up
+        rb.AddForce(0, verticleJumpPower, 0, ForceMode.Impulse);
+        //jump Forward
+        rb.AddForce((travelPoint - transform.position).normalized * horizontalJumpPower, ForceMode.Impulse);
     }
     Vector3 createNewWaypoint()
     {
         int randX = random.Next(-23, 23);
         int randZ = random.Next(-23, 23);
-        return new Vector3(randX, .75f, randZ);
+        return new Vector3(randX, 0, randZ);
     }
 }
