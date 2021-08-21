@@ -16,20 +16,26 @@ public class SlimeMotor : MonoBehaviour
     private Rigidbody rb;
     private System.Random random;
     private bool closeToGoal;
-    float elapsed;
+    
     RaycastHit ray;
     RaycastHit targetRay;
     public bool attracted;
     [SerializeField] LayerMask mask;
+    //timer varibles
+    float elapsed;
+    private float growTimer;
+
+    private float jumpReset;
     // Start is called before the first frame update
     void Start()
     {
         rb = this.GetComponent<Rigidbody>();
         closeToGoal = false;
         elapsed = 0f;
+        growTimer = 0f;
         random = new System.Random();
         attracted = false;
-        
+        jumpReset = 5f;
     }
 
     // Update is called once per frame
@@ -37,43 +43,57 @@ public class SlimeMotor : MonoBehaviour
     {
         //basic timer
         elapsed += Time.deltaTime;
-        if (elapsed >= jumpInterval)
+        if (attracted)
         {
-            //reset timer
-            if(!attracted)elapsed = 0f;
-            //if not close to goal
-            if (!attracted)
+            //wait for jump interval
+            if (elapsed >= jumpInterval)
             {
                 //jump
                 Jump();
+                //reset timer
+                elapsed = 0;
+            }
 
-                //see if close to goal
-                if (targetRay.distance <= 2)
-                {
-                    travelPoint = createNewWaypoint();
-                }
-            }
-            else 
+            //if close to goal
+            if (targetRay.distance <= 2)
             {
-                Jump();
-                if (targetRay.distance <= 1)
-                {
-                    horizontalJumpPower = 0;
-                }
-                if(elapsed >= 10)
-                {
-                    //transform.localScale.x *= 2;
-                    //transform.localScale.y *= 2;
-                    //transform.localScale.z *= 2;
-                    Vector3 tempV = Vector3.Scale(new Vector3(2,2,2), transform.position);
-                    transform.localScale = tempV;
-                }
+                growTimer += Time.deltaTime;
+                horizontalJumpPower = 0;
             }
+        }
+        //not attracted
+        else
+        {
+            //wait for jump interval
+            if (elapsed >= jumpInterval)
+            {
+                //jump
+                Jump();
+                //reset timer
+                elapsed = 0;
+            }
+            //see if close to goal
+            if (targetRay.distance <= 2)
+            {
+                travelPoint = CreateNewWaypoint();
+            }
+            if (growTimer >= 0) growTimer -= Time.deltaTime;
+        }
+        //if grow timer has reached 10
+        if (growTimer >= 10)
+        {
+            Grow();
+            attracted = false;
+            horizontalJumpPower = jumpReset;
+        }
+        if (growTimer <= 0)
+        {
+            Shrink();
         }
         //raycast to look at goal
         Vector3 goal = (travelPoint - transform.position).normalized;
         Physics.Raycast(transform.position, goal, out targetRay, mask);
-        Debug.Log(targetRay.collider.gameObject.name);
+        
 
     }
     void Jump()
@@ -84,10 +104,18 @@ public class SlimeMotor : MonoBehaviour
         //jump Forward
         rb.AddForce((travelPoint - transform.position).normalized * horizontalJumpPower, ForceMode.Impulse);
     }
-    Vector3 createNewWaypoint()
+    Vector3 CreateNewWaypoint()
     {
         int randX = random.Next(-23, 23);
         int randZ = random.Next(-23, 23);
         return new Vector3(randX, 0, randZ);
+    }
+    void Grow()
+    {
+        transform.localScale = new Vector3(2, 2, 2);
+    }
+    void Shrink()
+    {
+        transform.localScale = Vector3.one;
     }
 }
