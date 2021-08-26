@@ -1,12 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/*need to hop towards particular location
-* controll the jump power vericly
-* control jump power horizontily
-* jump interval
-* should be implemented using Rigidbody.AddForce
-*/
+
 public class SlimeMotor : MonoBehaviour
 {
     public float verticleJumpPower;
@@ -92,9 +87,9 @@ public class SlimeMotor : MonoBehaviour
         }
         //raycast to look at goal
         Vector3 goal = (travelPoint - transform.position).normalized;
-        Physics.Raycast(transform.position, goal, out targetRay, mask);
-        
+        Physics.Raycast(transform.position, goal, out targetRay, Mathf.Infinity, mask, QueryTriggerInteraction.Ignore);
 
+        //Debug.DrawRay(this.transform.position, travelPoint);
     }
     void Jump()
     {
