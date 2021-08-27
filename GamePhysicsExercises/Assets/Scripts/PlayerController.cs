@@ -6,38 +6,48 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed;
-    public float rotationSpeed;
     float tempX;
     float tempZ;
 
     float tempY;
     bool jumping;
+    public bool useGravity;
+    public float gravityStrength;
 
+    public float rotationSpeed;
     float tempRot;
     [SerializeField] Camera mainCamera;
+    //[SerializeField] 
+
+    public float skinWidth;
+    Collider col;
+    
     // Start is called before the first frame update
     void Start()
     {
-        
+        col = this.GetComponentInChildren<Collider>();
+        col.transform.localScale = transform.localScale + (Vector3.one * skinWidth);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        Vector3 expp = transform.position;
         //movement handling events
         {
+            
             if (tempX != 0)
             {
-                transform.position += transform.right * tempX * moveSpeed;
+                expp += transform.right * tempX * moveSpeed;
             }
             if (tempZ != 0)
             {
-                transform.position += transform.forward * tempZ * moveSpeed;
+                expp += transform.forward * tempZ * moveSpeed;
             }
             //jump handling
-            if (jumping)
+            if (useGravity)
             {
-                Debug.Log("Jumping");
+                expp += new Vector3(0,gravityStrength,0);
             }
             if (tempRot != 0)
             {
@@ -46,28 +56,34 @@ public class PlayerController : MonoBehaviour
             //end movement handling
         }
         //colision handling
-        Collider[] overlapColliders = Physics.OverlapBox(transform.position, transform.localScale/2, Quaternion.identity);
-        if (overlapColliders.Length > 1)
+        Vector3 pointZero = expp - new Vector3(0, .5f, 0);
+        Vector3 pointOne = expp - new Vector3(0, .5f, 0);
+        
+        Collider[] overlaps = Physics.OverlapCapsule(pointZero, pointOne, .5f);
+        foreach (var overlap in overlaps)
         {
-            Collider cldrOne = overlapColliders[0];
-            Collider cldrtwo = overlapColliders[1];
+            if (overlap == col) continue;
             Physics.ComputePenetration(
                 //first collider info
-                cldrOne,
-                cldrOne.transform.position,
-                cldrOne.transform.rotation,
+                col,
+                expp,
+                col.transform.rotation,
                 //second collider info
-                cldrtwo,
-                cldrtwo.transform.position,
-                cldrtwo.transform.rotation,
+                overlap,
+                overlap.transform.position,
+                overlap.transform.rotation,
                 //outputs
                 out Vector3 cldrDir,
                 out float cldrDist
                 );
             //draw a ray for testing purposes
-            Debug.DrawRay(this.transform.position, cldrDir, Color.red);
+            Debug.DrawRay(this.transform.position, cldrDir* cldrDist, Color.red);
+            if (overlap.name == "Floor") 
+                expp += cldrDir * -gravityStrength;
+            else expp += cldrDir * moveSpeed;
+            
         }
-        
+        transform.position = expp;
     }
 
     void OnMove(InputValue value)
