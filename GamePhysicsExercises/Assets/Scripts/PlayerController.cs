@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed;
     float tempX;
     float tempZ;
+    Vector2 tempVectTwo;
 
     float tempY;
     bool jumping;
@@ -21,7 +22,8 @@ public class PlayerController : MonoBehaviour
 
     public float skinWidth;
     Collider col;
-    
+
+    Vector3 expp;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,18 +34,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector3 expp = transform.position;
+        expp = transform.position;
         //movement handling events
         {
+
+            tempVectTwo.Normalize();
+
+            Debug.Log(tempVectTwo);
+            expp += new Vector3(tempVectTwo.x, 0, tempVectTwo.y)* moveSpeed;
             
-            if (tempX != 0)
-            {
-                expp += transform.right * tempX * moveSpeed;
-            }
-            if (tempZ != 0)
-            {
-                expp += transform.forward * tempZ * moveSpeed;
-            }
             //jump handling
             if (useGravity)
             {
@@ -56,9 +55,9 @@ public class PlayerController : MonoBehaviour
             //end movement handling
         }
         //colision handling
-        Vector3 pointZero = expp - new Vector3(0, .5f, 0);
+        Vector3 pointZero = expp - new Vector3(0, -.5f, 0);
         Vector3 pointOne = expp - new Vector3(0, .5f, 0);
-        
+
         Collider[] overlaps = Physics.OverlapCapsule(pointZero, pointOne, .5f);
         foreach (var overlap in overlaps)
         {
@@ -77,22 +76,20 @@ public class PlayerController : MonoBehaviour
                 out float cldrDist
                 );
             //draw a ray for testing purposes
-            Debug.DrawRay(this.transform.position, cldrDir* cldrDist, Color.red);
-            if (overlap.name == "Floor") 
+            Debug.DrawRay(this.transform.position, cldrDir * cldrDist, Color.red);
+            if (overlap.name == "Floor")
                 expp += cldrDir * -gravityStrength;
-            else expp += cldrDir * moveSpeed;
-            
+            else expp = cldrDir * moveSpeed;
+
         }
         transform.position = expp;
     }
 
     void OnMove(InputValue value)
     {
-        tempX = value.Get<Vector2>().x;
-        tempZ = value.Get<Vector2>().y;
-        Debug.Log(value);
-
-
+        tempVectTwo = value.Get<Vector2>();
+        //tempX = .x;
+        //tempZ = value.y;
         //not sure if this line is necessary
         //transform.position += new Vector3(tempX, 0, tempZ) * moveSpeed; 
     }
