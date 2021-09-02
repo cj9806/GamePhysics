@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class KinematicPlayerController : MonoBehaviour
 {
     public float moveSpeed;
     float tempX;
@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
 
     public float rotationSpeed;
     float tempRot;
-    [SerializeField] Camera mainCamera;
     //[SerializeField] 
 
     public float skinWidth;
@@ -39,9 +38,15 @@ public class PlayerController : MonoBehaviour
         {
 
             tempVectTwo.Normalize();
-
-            Debug.Log(tempVectTwo);
-            expp += new Vector3(tempVectTwo.x, 0, tempVectTwo.y)* moveSpeed;
+            if (tempX != 0)
+            {
+                expp += transform.right * tempX * moveSpeed;
+            }
+            if (tempZ != 0)
+            {
+                expp += transform.forward * tempZ * moveSpeed;
+            }
+            
             
             //jump handling
             if (useGravity)
@@ -55,10 +60,8 @@ public class PlayerController : MonoBehaviour
             //end movement handling
         }
         //colision handling
-        Vector3 pointZero = expp - new Vector3(0, -.5f, 0);
-        Vector3 pointOne = expp - new Vector3(0, .5f, 0);
-
-        Collider[] overlaps = Physics.OverlapCapsule(pointZero, pointOne, .5f);
+        
+        Collider[] overlaps = Physics.OverlapBox(transform.position,transform.localScale/2);
         foreach (var overlap in overlaps)
         {
             if (overlap == col) continue;
@@ -79,7 +82,7 @@ public class PlayerController : MonoBehaviour
             Debug.DrawRay(this.transform.position, cldrDir * cldrDist, Color.red);
             if (overlap.name == "Floor")
                 expp += cldrDir * -gravityStrength;
-            else expp = cldrDir * moveSpeed;
+            else expp += cldrDir * moveSpeed;
 
         }
         transform.position = expp;
@@ -88,8 +91,8 @@ public class PlayerController : MonoBehaviour
     void OnMove(InputValue value)
     {
         tempVectTwo = value.Get<Vector2>();
-        //tempX = .x;
-        //tempZ = value.y;
+        tempX = tempVectTwo.x;
+        tempZ = tempVectTwo.y;
         //not sure if this line is necessary
         //transform.position += new Vector3(tempX, 0, tempZ) * moveSpeed; 
     }

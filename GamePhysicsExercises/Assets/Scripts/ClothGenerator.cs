@@ -45,6 +45,8 @@ public class ClothGenerator : MonoBehaviour
                 {
                     SpringJoint springOne = clothGrid[i, j].AddComponent<SpringJoint>();
                     springOne.connectedBody = clothGrid[i + 1, j].GetComponent<Rigidbody>();
+                    springOne.spring = 20;
+                    springOne.damper = .4f;
                 }
                 //look down
                 if (j + 1 < clothHeigth)

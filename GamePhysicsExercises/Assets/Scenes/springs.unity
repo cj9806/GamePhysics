@@ -368,12 +368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ec2743b4f4898449055ae537df86af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  springs:
-  - {fileID: 109113374}
-  - {fileID: 109113373}
-  - {fileID: 109113372}
-  - {fileID: 109113371}
-  - {fileID: 109113370}
 --- !u!1 &199088318
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,12 +613,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ec2743b4f4898449055ae537df86af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  springs:
-  - {fileID: 199088328}
-  - {fileID: 199088327}
-  - {fileID: 199088326}
-  - {fileID: 199088325}
-  - {fileID: 199088324}
 --- !u!1 &283284972
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,7 +657,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &318367996
 GameObject:
@@ -824,12 +812,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ec2743b4f4898449055ae537df86af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  springs:
-  - {fileID: 318368002}
-  - {fileID: 318368007}
-  - {fileID: 318368006}
-  - {fileID: 318368005}
-  - {fileID: 318368004}
 --- !u!145 &318368004
 SpringJoint:
   m_ObjectHideFlags: 0
@@ -1013,10 +995,9 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 1, z: 10}
-  m_Children:
-  - {fileID: 859219004}
+  m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &432432669
 GameObject:
@@ -1263,12 +1244,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ec2743b4f4898449055ae537df86af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  springs:
-  - {fileID: 432432679}
-  - {fileID: 432432678}
-  - {fileID: 432432677}
-  - {fileID: 432432676}
-  - {fileID: 432432675}
 --- !u!1 &517520727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1306,7 +1281,7 @@ Transform:
   - {fileID: 1887375527}
   - {fileID: 1314979920}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &740342746
 GameObject:
@@ -1481,11 +1456,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 859219000}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.56, z: 0}
-  m_LocalScale: {x: 0.1, y: 1, z: 0.1}
+  m_LocalPosition: {x: 1, y: 0.56, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 378963623}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1314979915
 GameObject:
@@ -1868,10 +1843,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ec2743b4f4898449055ae537df86af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  springs:
-  - {fileID: 1570718137}
-  - {fileID: 1570718136}
-  - {fileID: 1570718135}
 --- !u!1 &1705477723
 GameObject:
   m_ObjectHideFlags: 0
@@ -2028,15 +1999,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ec2743b4f4898449055ae537df86af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  springs:
-  - {fileID: 1705477724}
-  - {fileID: 1705477737}
-  - {fileID: 1705477736}
-  - {fileID: 1705477735}
-  - {fileID: 1705477734}
-  - {fileID: 1705477733}
-  - {fileID: 1705477732}
-  - {fileID: 1705477731}
 --- !u!145 &1705477731
 SpringJoint:
   m_ObjectHideFlags: 0
@@ -2288,7 +2250,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &1887375522
 GameObject:
@@ -2487,10 +2449,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ec2743b4f4898449055ae537df86af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  springs:
-  - {fileID: 1887375530}
-  - {fileID: 1887375529}
-  - {fileID: 1887375528}
 --- !u!1 &1984922102
 GameObject:
   m_ObjectHideFlags: 0
@@ -2688,7 +2646,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ec2743b4f4898449055ae537df86af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  springs:
-  - {fileID: 1984922110}
-  - {fileID: 1984922109}
-  - {fileID: 1984922108}
