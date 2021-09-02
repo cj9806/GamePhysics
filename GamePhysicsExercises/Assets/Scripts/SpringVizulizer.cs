@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class SpringVisualize : MonoBehaviour
+public class SpringVizulizer : MonoBehaviour
 {
-    public SpringJoint[] springs; 
+    public SpringJoint[] springs;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,10 +19,10 @@ public class SpringVisualize : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        foreach(SpringJoint spring in springs)
+        foreach (SpringJoint spring in springs)
         {
-            Gizmos.DrawLine(transform.position, spring.connectedBody.position);
+            Gizmos.DrawLine(spring.transform.position, spring.connectedBody.position);
         }
-        
+
     }
 }

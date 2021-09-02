@@ -5,39 +5,48 @@ using UnityEngine.InputSystem;
 
 public class KinematicPlayerController : MonoBehaviour
 {
+    [SerializeField] Camera camera;
     public float moveSpeed;
     float tempX;
     float tempZ;
     Vector2 tempVectTwo;
 
-    float tempY;
-    bool jumping;
     public bool useGravity;
     public float gravityStrength;
 
     public float rotationSpeed;
-    float tempRot;
+    float lookX;
+    float lookY;
     //[SerializeField] 
 
     public float skinWidth;
     Collider col;
-
+    
     Vector3 expp;
+
+    public PlayerInput input;
     // Start is called before the first frame update
     void Start()
     {
         col = this.GetComponentInChildren<Collider>();
         col.transform.localScale = transform.localScale + (Vector3.one * skinWidth);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        Debug.Log(lookX + " " + lookY);
         expp = transform.position;
         //movement handling events
         {
+            Vector2 LookInput = input.currentActionMap["Look"].ReadValue<Vector2>();
+            lookX = LookInput.x;
+            lookY = LookInput.y;
 
-            tempVectTwo.Normalize();
+            Vector2 moveInput = input.currentActionMap["Move"].ReadValue<Vector2>();
+            tempX = moveInput.x;
+            tempZ = moveInput.y;
             if (tempX != 0)
             {
                 expp += transform.right * tempX * moveSpeed;
@@ -53,9 +62,11 @@ public class KinematicPlayerController : MonoBehaviour
             {
                 expp += new Vector3(0,gravityStrength,0);
             }
-            if (tempRot != 0)
+           
+            if(lookX != 0 || lookY != 0)
             {
-                transform.Rotate(new Vector3(0, tempRot, 0) * rotationSpeed);
+                transform.Rotate(new Vector3(0,lookX,0) * rotationSpeed);
+                camera.transform.Rotate(new Vector3(-lookY, 0, 0) * rotationSpeed);
             }
             //end movement handling
         }
@@ -86,22 +97,5 @@ public class KinematicPlayerController : MonoBehaviour
 
         }
         transform.position = expp;
-    }
-
-    void OnMove(InputValue value)
-    {
-        tempVectTwo = value.Get<Vector2>();
-        tempX = tempVectTwo.x;
-        tempZ = tempVectTwo.y;
-        //not sure if this line is necessary
-        //transform.position += new Vector3(tempX, 0, tempZ) * moveSpeed; 
-    }
-    void OnJump(InputValue value)
-    {
-        jumping = value.isPressed;
-    }
-    void OnLook(InputValue value)
-    {
-        tempRot = value.Get<Vector2>().x;
     }
 }
