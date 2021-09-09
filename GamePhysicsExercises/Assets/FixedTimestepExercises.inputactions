@@ -30,6 +30,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "PickUp",
+                    "type": "PassThrough",
+                    "id": "b5d738ee-6187-4a6b-b2b9-28c4b1222ef7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Jump",
                     "type": "PassThrough",
                     "id": "0d5549ea-701b-494d-ac42-765084f65020",
@@ -267,6 +275,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f514eaa9-d754-4e1b-b0a6-ef8f0e045f2c",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "PickUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
