@@ -5,18 +5,20 @@ using UnityEngine.InputSystem;
 
 public class KinematicPlayerController : MonoBehaviour
 {
+    [Header("Movement Controlls")]
     [SerializeField] Camera camera;
     public float moveSpeed;
     float tempX;
     float tempZ;
-    Vector2 tempVectTwo;
+    public float rotationSpeed;
+    public float lookMax;
+    private float pitchControl = 0f;
 
+    [Header("Gravity")]
     public bool useGravity;
     public float gravityStrength;
 
-    public float rotationSpeed;
-    float lookX;
-    float lookY;
+    
     //[SerializeField] 
 
     public float skinWidth;
@@ -27,6 +29,7 @@ public class KinematicPlayerController : MonoBehaviour
 
     public PlayerInput input;
     bool pickingUp;
+    bool firing;
 
     public float playerReach;
     FixedJoint joint;
@@ -38,19 +41,30 @@ public class KinematicPlayerController : MonoBehaviour
         skin = col.size + (Vector3.one * skinWidth);
         //col
         Cursor.lockState = CursorLockMode.Locked;
-        joint = GetComponent<FixedJoint>();
+        joint = camera.GetComponent<FixedJoint>();
     }
+    void Update()
+    {
+        //looking
+        Vector2 lookInput = input.currentActionMap["Look"].ReadValue<Vector2>();
+        transform.Rotate(Vector3.up, lookInput.x*rotationSpeed);
+        pitchControl = Mathf.Clamp(pitchControl - lookInput.y * rotationSpeed, -lookMax, lookMax);
+        camera.transform.localRotation = Quaternion.Euler(pitchControl, 0, 0);
+        
 
+
+        //jump handling
+        if (useGravity)
+        {
+            expp += new Vector3(0, gravityStrength, 0);
+        }
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
         expp = transform.position;
         //movement handling events
         {
-            //looking
-            Vector2 LookInput = input.currentActionMap["Look"].ReadValue<Vector2>();
-            lookX = LookInput.x;
-            lookY = LookInput.y;
             //moving
             Vector2 moveInput = input.currentActionMap["Move"].ReadValue<Vector2>();
             tempX = moveInput.x;
@@ -63,28 +77,14 @@ public class KinematicPlayerController : MonoBehaviour
             {
                 expp += transform.forward * tempZ * moveSpeed;
             }
-            //pick up animations
-            //if right click and there is no held object pick up
-            //elseif right click and there is a held object do nothing
-            //elseif no right click
-            if (pickingUp && this.gameObject.GetComponent <FixedJoint>()== null) 
+            //pick up handling
+            if (pickingUp && this.gameObject.GetComponent<FixedJoint>() == null)
             {
                 PickUp();
             }
-            else if(!pickingUp && this.gameObject.GetComponent<FixedJoint>() != null)
+            else if (!pickingUp && joint.connectedBody != null)
             {
                 Drop();
-            }
-            //jump handling
-            if (useGravity)
-            {
-                expp += new Vector3(0,gravityStrength,0);
-            }
-           
-            if(lookX != 0 || lookY != 0)
-            {
-                transform.Rotate(new Vector3(0,lookX,0) * rotationSpeed);
-                camera.transform.Rotate(new Vector3(-lookY, 0, 0) * rotationSpeed);
             }
             //end movement handling
         }
@@ -111,7 +111,7 @@ public class KinematicPlayerController : MonoBehaviour
             Debug.DrawRay(this.transform.position, cldrDir * cldrDist, Color.red);
             if (overlap.name == "Floor")
                 expp += cldrDir * cldrDist;
-            else expp += cldrDir * moveSpeed;
+            else expp += cldrDir * cldrDist;
 
         }
         transform.position = expp;
@@ -120,16 +120,24 @@ public class KinematicPlayerController : MonoBehaviour
     {
         pickingUp = value.isPressed;
     }
-
+    void OnFire(InputValue value)
+    {
+        firing = value.isPressed;
+    }
     void PickUp()
     {
         var ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Physics.Raycast(ray, out RaycastHit hit, playerReach, grabableLayers);
-        GameObject slimeColider = hit.collider.gameObject;
-        joint.connectedBody = slimeColider.GetComponent<Rigidbody>();
+        Debug.DrawRay(camera.transform.position, ray.direction, Color.red);
+        if (hit.collider != null)
+        {
+            GameObject slimeColider = hit.collider.gameObject;
+            joint.connectedBody = slimeColider.GetComponent<Rigidbody>();
+            Debug.Log(slimeColider.name);
+        }
     }
     void Drop()
     {
-        Destroy(this.GetComponent<FixedJoint>());
+        joint.connectedBody = null;
     }
 }
