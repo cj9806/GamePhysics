@@ -271,9 +271,17 @@ MonoBehaviour:
   jumpInterval: 5
   travelPoint: {x: 0, y: 0, z: 0}
   attracted: 0
+  attractionRange: 0
   mask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 55
+  growTimer: 0
+  player: {fileID: 0}
+  materialsList:
+  - {fileID: 2100000, guid: ca05b53709a8dcc45b070be295154a97, type: 2}
+  - {fileID: 2100000, guid: a61742dd2981aa249b218032709780d5, type: 2}
+  - {fileID: 2100000, guid: eb6bc22062998a34d9d66ec5c0aac38c, type: 2}
+  - {fileID: 2100000, guid: feeac49c7a2f68d4aa005e48ce2a4a25, type: 2}
 --- !u!1 &110049380155614915
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,6 +583,7 @@ GameObject:
   - component: {fileID: 3539552723117646204}
   - component: {fileID: 7485086693323122851}
   - component: {fileID: 1561638024616775957}
+  - component: {fileID: 8020742803644581145}
   m_Layer: 8
   m_Name: Cube2
   m_TagString: Untagged
@@ -881,6 +890,29 @@ SpringJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!145 &8020742803644581145
+SpringJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852463346815863906}
+  m_ConnectedBody: {fileID: 6122520657290256997}
+  m_Anchor: {x: 0, y: 0.5, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: 1, y: -0.5, z: -1}
+  serializedVersion: 2
+  m_Spring: 10
+  m_Damper: 0.2
+  m_MinDistance: 0
+  m_MaxDistance: 0
+  m_Tolerance: 0.025
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &4787513396475324034
 GameObject:
   m_ObjectHideFlags: 0
@@ -902,6 +934,7 @@ GameObject:
   - component: {fileID: 133487503180396489}
   - component: {fileID: 572450619965462073}
   - component: {fileID: 5042514249139056055}
+  - component: {fileID: 661590014272418466}
   m_Layer: 8
   m_Name: Cube3
   m_TagString: Untagged
@@ -1173,6 +1206,29 @@ SpringJoint:
   m_Anchor: {x: 0.5, y: 0, z: 0.5}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0.5, y: -1, z: 0.5}
+  serializedVersion: 2
+  m_Spring: 10
+  m_Damper: 0.2
+  m_MinDistance: 0
+  m_MaxDistance: 0
+  m_Tolerance: 0.025
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!145 &661590014272418466
+SpringJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4787513396475324034}
+  m_ConnectedBody: {fileID: 1396822262941735236}
+  m_Anchor: {x: 0, y: 0.5, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -1, y: -0.5, z: 1}
   serializedVersion: 2
   m_Spring: 10
   m_Damper: 0.2
@@ -1646,6 +1702,7 @@ GameObject:
   - component: {fileID: 1186357467641692035}
   - component: {fileID: 4238811903912691023}
   - component: {fileID: 4521136619295063263}
+  - component: {fileID: 8791187435313847408}
   m_Layer: 8
   m_Name: Cube4
   m_TagString: Untagged
@@ -1929,6 +1986,29 @@ SpringJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!145 &8791187435313847408
+SpringJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7919168952566737783}
+  m_ConnectedBody: {fileID: 678574650461169063}
+  m_Anchor: {x: 0, y: 0.5, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: 1, y: -0.5, z: 1}
+  serializedVersion: 2
+  m_Spring: 10
+  m_Damper: 0.2
+  m_MinDistance: 0
+  m_MaxDistance: 0
+  m_Tolerance: 0.025
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &8177316738024336810
 GameObject:
   m_ObjectHideFlags: 0
@@ -2183,6 +2263,7 @@ GameObject:
   - component: {fileID: 2000484855617914025}
   - component: {fileID: 2552476683192208313}
   - component: {fileID: 1800974041081789986}
+  - component: {fileID: 2889971770553410616}
   m_Layer: 8
   m_Name: Cube1
   m_TagString: Untagged
@@ -2477,6 +2558,29 @@ SpringJoint:
   m_Anchor: {x: -0.5, y: 0, z: -0.5}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: -0.5, y: -1, z: -0.5}
+  serializedVersion: 2
+  m_Spring: 10
+  m_Damper: 0.2
+  m_MinDistance: 0
+  m_MaxDistance: 0
+  m_Tolerance: 0.025
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!145 &2889971770553410616
+SpringJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8179932705491961833}
+  m_ConnectedBody: {fileID: 1594536808178549716}
+  m_Anchor: {x: 0, y: 0.5, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -1, y: -0.5, z: -1}
   serializedVersion: 2
   m_Spring: 10
   m_Damper: 0.2

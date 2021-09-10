@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class SlimeMotor : MonoBehaviour
 {
-    public GameObject parentObject;
     public float verticleJumpPower;
     public float horizontalJumpPower;
     public float jumpInterval;
     public Vector3 travelPoint;
     private Rigidbody rb;
     private System.Random random;
-    private bool closeToGoal;
     
-    RaycastHit ray;
-    RaycastHit targetRay;
     public bool attracted;
     public float attractionRange;
     [SerializeField] LayerMask mask;
@@ -27,17 +23,22 @@ public class SlimeMotor : MonoBehaviour
 
     private float jumpReset;
     private Vector3 baseScale;
+
+    [HideInInspector]
+    public KinematicPlayerController player;
+
+    public Material[] materialsList;
     // Start is called before the first frame update
     void Start()
     {
         rb = this.GetComponent<Rigidbody>();
-        closeToGoal = false;
         elapsed = 0f;
         growTimer = 0f;
         random = new System.Random();
         attracted = false;
         jumpReset = horizontalJumpPower;
         baseScale = GetComponentInParent<Transform>().localScale;
+        ColorMeSlimey();
     }
 
     // Update is called once per frame
@@ -67,9 +68,7 @@ public class SlimeMotor : MonoBehaviour
         }
         //not attracted
         else
-        {
-            goal = (travelPoint - transform.position).normalized;
-            Physics.Raycast(transform.position, goal, out targetRay, Mathf.Infinity, mask, QueryTriggerInteraction.Ignore);
+        { 
             //see if close to goal
             if (distance <= attractionRange)
             {
@@ -80,21 +79,23 @@ public class SlimeMotor : MonoBehaviour
         //if grow timer has reached 10
         if (growTimer >= 10)
         {
-            Grow();
+            //Grow();
             attracted = false;
             horizontalJumpPower = jumpReset;
         }
         if (growTimer <= 0)
         {
-            Shrink();
+            //Shrink();
         }
-        //raycast to look at goal
-        
-        //Debug.DrawRay(this.transform.position, travelPoint);
+        //delete slime if it gets trown off the side
+        if (transform.parent.transform.position.y <= -10f)
+        {
+            Destroy(transform.parent.gameObject);
+            player.spawnedSlimes--;
+        }
     }
     void Jump()
     {
-        Physics.Raycast(transform.position, Vector3.down, out ray);
         //jump up
         rb.AddForce(0, verticleJumpPower, 0, ForceMode.Impulse);
         //jump Forward
@@ -108,10 +109,19 @@ public class SlimeMotor : MonoBehaviour
     }
     void Grow()
     {
-        parentObject.transform.localScale = baseScale * 2;
+        transform.parent.transform.localScale = baseScale * 2;
     }
     void Shrink()
     {
-        parentObject.transform.localScale = baseScale;
+        transform.parent.transform.localScale = baseScale;
+    }
+    void ColorMeSlimey()
+    {
+        MeshRenderer[] mr = transform.parent.transform.GetComponentsInChildren<MeshRenderer>();
+        Material choice = materialsList[random.Next(0, materialsList.Length)];
+        foreach(MeshRenderer mesh in mr)
+        {
+            mesh.material = choice;
+        }
     }
 }

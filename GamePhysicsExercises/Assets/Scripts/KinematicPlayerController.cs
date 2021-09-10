@@ -7,15 +7,13 @@ public class KinematicPlayerController : MonoBehaviour
 {
     public PlayerInput input;
     Vector3 expp;
-    bool pickingUp;
-    bool firing;
     FixedJoint joint;
+    [HideInInspector]
+    public int spawnedSlimes = 0;
 
     [Header("Movement Controlls")]
     [SerializeField] GameObject camera;
     public float moveSpeed;
-    float tempX;
-    float tempZ;
     public float rotationSpeed;
     public float lookMax;
     private float pitchControl = 0f;
@@ -33,6 +31,7 @@ public class KinematicPlayerController : MonoBehaviour
     public float playerReach;
     [SerializeField] LayerMask grabableLayers;
     public float explosionForce;
+    [SerializeField] GameObject spawnableSlime;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +39,6 @@ public class KinematicPlayerController : MonoBehaviour
         skin = col.size + (Vector3.one * skinWidth);
         //col
         Cursor.lockState = CursorLockMode.Locked;
-        
     }
     void Update()
     {
@@ -49,35 +47,22 @@ public class KinematicPlayerController : MonoBehaviour
         transform.Rotate(Vector3.up, lookInput.x*rotationSpeed);
         pitchControl = Mathf.Clamp(pitchControl - lookInput.y * rotationSpeed, -lookMax, lookMax);
         camera.transform.localRotation = Quaternion.Euler(pitchControl, 0, 0);
-        
-
-
-        
     }
     // Update is called once per frame
     void FixedUpdate()
     {
         expp = transform.position;
-        //movement handling events
+        //moving
+        Vector2 moveInput = input.currentActionMap["Move"].ReadValue<Vector2>();
+        expp += transform.right * moveInput.x * moveSpeed;
+        expp += transform.forward * moveInput.y * moveSpeed;
+
+        //Verticle movement
+        if (useGravity)
         {
-            //moving
-            Vector2 moveInput = input.currentActionMap["Move"].ReadValue<Vector2>();
-            tempX = moveInput.x;
-            tempZ = moveInput.y;
-            if (tempX != 0)
-            {
-                expp += transform.right * tempX * moveSpeed;
-            }
-            if (tempZ != 0)
-            {
-                expp += transform.forward * tempZ * moveSpeed;
-            }
-            //jump handling
-            if (useGravity)
-            {
-                expp += new Vector3(0, gravityStrength, 0);
-            }
+            expp += new Vector3(0, gravityStrength, 0);
         }
+        
         //colision handling
         
         Collider[] overlaps = Physics.OverlapBox(expp, skin, col.transform.rotation);
@@ -111,7 +96,6 @@ public class KinematicPlayerController : MonoBehaviour
     {
         if (value.isPressed)
         {
-            Debug.Log("pickup");
             PickUp();
         }
         else if(!value.isPressed && joint != null)
@@ -121,10 +105,20 @@ public class KinematicPlayerController : MonoBehaviour
     {
         if (value.isPressed && joint != null)
         {
-            Rigidbody ammo = joint.connectedBody;
+            Rigidbody ammo = joint.connectedBody.transform.parent.Find("slime brain").GetComponent<Rigidbody>();
             Drop();
             
             ammo.AddForce(camera.transform.forward*explosionForce);
+        }
+    }
+    void OnSpawn(InputValue value)
+    {
+        if (spawnedSlimes < 100)
+        {
+            GameObject newSlime = GameObject.Instantiate(spawnableSlime);
+            newSlime = newSlime.transform.GetChild(0).gameObject;
+            newSlime.GetComponent<SlimeMotor>().player = this;
+            spawnedSlimes++;
         }
     }
     void PickUp()
