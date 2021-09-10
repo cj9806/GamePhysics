@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SlimeMotor : MonoBehaviour
 {
+    public GameObject parentObject;
     public float verticleJumpPower;
     public float horizontalJumpPower;
     public float jumpInterval;
@@ -15,12 +16,17 @@ public class SlimeMotor : MonoBehaviour
     RaycastHit ray;
     RaycastHit targetRay;
     public bool attracted;
+    public float attractionRange;
     [SerializeField] LayerMask mask;
     //timer varibles
     float elapsed;
-    private float growTimer;
+    public float growTimer;
+
+    Vector3 goal;
+    private float distance;
 
     private float jumpReset;
+    private Vector3 baseScale;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +36,8 @@ public class SlimeMotor : MonoBehaviour
         growTimer = 0f;
         random = new System.Random();
         attracted = false;
-        jumpReset = 5f;
+        jumpReset = horizontalJumpPower;
+        baseScale = GetComponentInParent<Transform>().localScale;
     }
 
     // Update is called once per frame
@@ -38,19 +45,21 @@ public class SlimeMotor : MonoBehaviour
     {
         //basic timer
         elapsed += Time.deltaTime;
+        if (elapsed >= jumpInterval)
+        {
+            //jump
+            Jump();
+            //reset timer
+            elapsed = 0;
+        }
+        distance = Vector3.Distance(transform.position, travelPoint);
+
         if (attracted)
         {
-            //wait for jump interval
-            if (elapsed >= jumpInterval)
-            {
-                //jump
-                Jump();
-                //reset timer
-                elapsed = 0;
-            }
-
+            
+            
             //if close to goal
-            if (targetRay.distance <= 2)
+            if (distance <= attractionRange)
             {
                 growTimer += Time.deltaTime;
                 horizontalJumpPower = 0;
@@ -59,18 +68,10 @@ public class SlimeMotor : MonoBehaviour
         //not attracted
         else
         {
-            Vector3 goal = (travelPoint - transform.position).normalized;
+            goal = (travelPoint - transform.position).normalized;
             Physics.Raycast(transform.position, goal, out targetRay, Mathf.Infinity, mask, QueryTriggerInteraction.Ignore);
-            //wait for jump interval
-            if (elapsed >= jumpInterval)
-            {
-                //jump
-                Jump();
-                //reset timer
-                elapsed = 0;
-            }
             //see if close to goal
-            if (targetRay.distance <= 2)
+            if (distance <= attractionRange)
             {
                 travelPoint = CreateNewWaypoint();
             }
@@ -107,10 +108,10 @@ public class SlimeMotor : MonoBehaviour
     }
     void Grow()
     {
-        transform.localScale = new Vector3(2, 2, 2);
+        parentObject.transform.localScale = baseScale * 2;
     }
     void Shrink()
     {
-        transform.localScale = Vector3.one;
+        parentObject.transform.localScale = baseScale;
     }
 }

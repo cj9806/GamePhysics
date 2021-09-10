@@ -27,6 +27,7 @@ public class SlimePost : MonoBehaviour
         SlimeMotor sm = other.GetComponentInParent<SlimeMotor>();
         if (sm != null)
         {
+            if(sm.growTimer <= 0)
             sm.travelPoint = transform.position;
             sm.attracted = true;
         }
