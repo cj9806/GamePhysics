@@ -5,8 +5,14 @@ using UnityEngine.InputSystem;
 
 public class KinematicPlayerController : MonoBehaviour
 {
+    public PlayerInput input;
+    Vector3 expp;
+    bool pickingUp;
+    bool firing;
+    FixedJoint joint;
+
     [Header("Movement Controlls")]
-    [SerializeField] Camera camera;
+    [SerializeField] GameObject camera;
     public float moveSpeed;
     float tempX;
     float tempZ;
@@ -18,22 +24,15 @@ public class KinematicPlayerController : MonoBehaviour
     public bool useGravity;
     public float gravityStrength;
 
-    
-    //[SerializeField] 
-
+    [Header("Collison Detection")]
     public float skinWidth;
     private Vector3 skin;
     BoxCollider col;
     
-    Vector3 expp;
-
-    public PlayerInput input;
-    bool pickingUp;
-    bool firing;
-
+    [Header("Player Input")]
     public float playerReach;
-    FixedJoint joint;
     [SerializeField] LayerMask grabableLayers;
+    public float explosionForce;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +40,7 @@ public class KinematicPlayerController : MonoBehaviour
         skin = col.size + (Vector3.one * skinWidth);
         //col
         Cursor.lockState = CursorLockMode.Locked;
-        joint = camera.GetComponent<FixedJoint>();
+        
     }
     void Update()
     {
@@ -53,11 +52,7 @@ public class KinematicPlayerController : MonoBehaviour
         
 
 
-        //jump handling
-        if (useGravity)
-        {
-            expp += new Vector3(0, gravityStrength, 0);
-        }
+        
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -77,16 +72,11 @@ public class KinematicPlayerController : MonoBehaviour
             {
                 expp += transform.forward * tempZ * moveSpeed;
             }
-            //pick up handling
-            if (pickingUp && this.gameObject.GetComponent<FixedJoint>() == null)
+            //jump handling
+            if (useGravity)
             {
-                PickUp();
+                expp += new Vector3(0, gravityStrength, 0);
             }
-            else if (!pickingUp && joint.connectedBody != null)
-            {
-                Drop();
-            }
-            //end movement handling
         }
         //colision handling
         
@@ -94,6 +84,7 @@ public class KinematicPlayerController : MonoBehaviour
         foreach (var overlap in overlaps)
         {
             if (overlap == col) continue;
+            if (overlap.isTrigger) continue;
             Physics.ComputePenetration(
                 //first collider info
                 col,
@@ -118,26 +109,40 @@ public class KinematicPlayerController : MonoBehaviour
     }
     void OnPickUp(InputValue value)
     {
-        pickingUp = value.isPressed;
+        if (value.isPressed)
+        {
+            Debug.Log("pickup");
+            PickUp();
+        }
+        else if(!value.isPressed && joint != null)
+            Drop();
     }
     void OnFire(InputValue value)
     {
-        firing = value.isPressed;
+        if (value.isPressed && joint != null)
+        {
+            Rigidbody ammo = joint.connectedBody;
+            Drop();
+            
+            ammo.AddForce(camera.transform.forward*explosionForce);
+        }
     }
     void PickUp()
     {
-        var ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        var ray = camera.GetComponent<Camera>().ScreenPointToRay(Mouse.current.position.ReadValue());
         Physics.Raycast(ray, out RaycastHit hit, playerReach, grabableLayers);
         Debug.DrawRay(camera.transform.position, ray.direction, Color.red);
         if (hit.collider != null)
         {
+
+            joint = camera.AddComponent<FixedJoint>();
             GameObject slimeColider = hit.collider.gameObject;
             joint.connectedBody = slimeColider.GetComponent<Rigidbody>();
-            Debug.Log(slimeColider.name);
         }
     }
     void Drop()
     {
-        joint.connectedBody = null;
+        joint.connectedBody.WakeUp();
+        Destroy(joint);
     }
 }

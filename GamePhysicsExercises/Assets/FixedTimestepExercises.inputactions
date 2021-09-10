@@ -23,7 +23,7 @@
                 },
                 {
                     "name": "Fire",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "d8ed9673-093d-4760-a61f-d5d7f1606ae5",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -33,14 +33,6 @@
                     "name": "PickUp",
                     "type": "PassThrough",
                     "id": "b5d738ee-6187-4a6b-b2b9-28c4b1222ef7",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "0d5549ea-701b-494d-ac42-765084f65020",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -227,7 +219,7 @@
                     "name": "",
                     "id": "05f6913d-c316-48b2-a6bb-e225f14c7960",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Fire",
@@ -269,20 +261,9 @@
                 },
                 {
                     "name": "",
-                    "id": "74a584f8-cd0d-4976-9555-74562790a1d3",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "f514eaa9-d754-4e1b-b0a6-ef8f0e045f2c",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "PickUp",

@@ -59,6 +59,8 @@ public class SlimeMotor : MonoBehaviour
         //not attracted
         else
         {
+            Vector3 goal = (travelPoint - transform.position).normalized;
+            Physics.Raycast(transform.position, goal, out targetRay, Mathf.Infinity, mask, QueryTriggerInteraction.Ignore);
             //wait for jump interval
             if (elapsed >= jumpInterval)
             {
@@ -86,9 +88,7 @@ public class SlimeMotor : MonoBehaviour
             Shrink();
         }
         //raycast to look at goal
-        Vector3 goal = (travelPoint - transform.position).normalized;
-        Physics.Raycast(transform.position, goal, out targetRay, Mathf.Infinity, mask, QueryTriggerInteraction.Ignore);
-
+        
         //Debug.DrawRay(this.transform.position, travelPoint);
     }
     void Jump()
@@ -101,8 +101,8 @@ public class SlimeMotor : MonoBehaviour
     }
     Vector3 CreateNewWaypoint()
     {
-        int randX = random.Next(-23, 23);
-        int randZ = random.Next(-23, 23);
+        int randX = random.Next(-74, 74);
+        int randZ = random.Next(-74, 74);
         return new Vector3(randX, 0, randZ);
     }
     void Grow()
