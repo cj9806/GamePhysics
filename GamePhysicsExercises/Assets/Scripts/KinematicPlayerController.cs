@@ -115,7 +115,9 @@ public class KinematicPlayerController : MonoBehaviour
     {
         if (spawnedSlimes < 100)
         {
-            GameObject newSlime = GameObject.Instantiate(spawnableSlime);
+            Vector3 pos = transform.position + (transform.forward * 5);
+            pos.y += 5;
+            GameObject newSlime = GameObject.Instantiate(spawnableSlime,pos,Quaternion.identity);
             newSlime = newSlime.transform.GetChild(0).gameObject;
             newSlime.GetComponent<SlimeMotor>().player = this;
             spawnedSlimes++;
