@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 6773410d013581b42a9f1d46ba41f719
+  - enabled: 1
+    path: Assets/Scenes/Controls.unity
+    guid: 4dd4498809eb8e946b1263f8767b4d5a
+  - enabled: 1
+    path: Assets/Scenes/SlimeGame.unity
+    guid: a64aeae38f79bf84ab3fc02599e66851
   m_configObjects: {}

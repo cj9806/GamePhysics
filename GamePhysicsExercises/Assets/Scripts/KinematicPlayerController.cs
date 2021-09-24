@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class KinematicPlayerController : MonoBehaviour
 {
@@ -105,7 +106,12 @@ public class KinematicPlayerController : MonoBehaviour
     {
         if (value.isPressed && joint != null)
         {
-            Rigidbody ammo = joint.connectedBody.transform.parent.Find("slime brain").GetComponent<Rigidbody>();
+            Rigidbody ammo = null;
+            if (joint.connectedBody.gameObject.layer == 8)
+            {
+                ammo = joint.connectedBody.transform.parent.Find("slime brain").GetComponent<Rigidbody>();
+            }
+            else ammo = joint.connectedBody;
             Drop();
             
             ammo.AddForce(camera.transform.forward*explosionForce);
@@ -122,6 +128,11 @@ public class KinematicPlayerController : MonoBehaviour
             newSlime.GetComponent<SlimeMotor>().player = this;
             spawnedSlimes++;
         }
+    }
+    void OnQuit(InputValue value)
+    {
+        Cursor.lockState = CursorLockMode.None;
+        SceneManager.LoadScene("MainMenu");
     }
     void PickUp()
     {
